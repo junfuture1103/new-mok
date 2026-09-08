@@ -4,6 +4,10 @@
 
 **[바로 플레이하기](https://junfuture1103.github.io/new-mok/)** — GitHub Pages 공개 정적 사이트입니다. 로그인 없이 접속할 수 있습니다.
 
+[파문 규칙](https://junfuture1103.github.io/new-mok/rules/ripple.html) · [침식 규칙](https://junfuture1103.github.io/new-mok/rules/erosion.html) · [유산 규칙](https://junfuture1103.github.io/new-mok/rules/legacy.html)
+
+검색 메타데이터·공유 이미지·사이트맵과 Google/네이버 소유자 등록 절차는 [검색 노출 안내](docs/SEO.ko.md)에 정리했습니다.
+
 세 게임의 기본 글꼴은 프리텐다드 1.3.9입니다. 제목·본문·버튼·좌표·기보에 적용하며, [글꼴과 라이선스](public/fonts/README.md)를 정적 빌드에 포함합니다.
 
 - AI 대전(가볍게 / 신중하게), 같은 기기의 2인 대전

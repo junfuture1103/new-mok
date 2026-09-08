@@ -133,3 +133,26 @@ footer {border-top:1px solid var(--border);padding:19px 0 24px;display:flex;just
 }
 @media(max-width:430px) {.studio{padding:0 15px}.masthead{gap:10px}.game-tabs[data-slot]{gap:18px}.wordmark{font-size:23px}.brand-seal{display:none}.new-game[data-slot]{padding:0 6px;font-size:11px}.side-column{display:block}.guide-panel{padding-top:24px}.move-log{padding-top:24px}.board-frame{padding:19px}.column-coordinates{left:19px;right:19px;top:3px}.row-coordinates{top:19px;bottom:19px;left:2px}.game-heading h1{font-size:34px}.hand-title span{font-size:11px}.move-card{gap:7px;padding:10px 4px}.board-caption{min-height:44px}footer{font-size:10px}}
 @media(prefers-reduced-motion:reduce) {*,*:before,*:after{animation:none!important;transition:none!important}}
+
+.rules-link{display:inline-block;margin-top:18px;font-size:13px;color:var(--primary);text-underline-offset:4px}
+.site-introduction{margin-top:76px;padding-top:36px;border-top:1px solid var(--border)}
+.intro-heading{max-width:680px}.intro-heading h2,.common-questions h2{font-size:23px;font-weight:600;letter-spacing:-.7px}
+.intro-heading p{margin:16px 0 28px;font-size:16px;line-height:1.9;color:#666055}
+.guide-index{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}
+.guide-index>a{padding:24px 0;border-top:1px solid var(--border);color:inherit;text-decoration:none}
+.guide-index>a>span{font-size:12px;color:#777267}.guide-index h3{font-size:24px;font-weight:600;margin-top:12px}.guide-index h3 small{font-size:13px;font-weight:400;color:#777267;margin-left:8px}
+.guide-index p{font-size:15px;line-height:1.8;margin:14px 0 20px;max-width:300px}.guide-index b{font-size:13px;font-weight:500;color:var(--primary)}
+.guide-index a:hover h3{text-decoration:underline;text-underline-offset:5px}
+.common-questions{margin-top:34px;max-width:800px}.common-questions h2{margin-bottom:22px}
+.common-questions details{border-top:1px solid var(--border);padding:18px 0}.common-questions summary{cursor:pointer;font-size:16px;font-weight:500}.common-questions p{font-size:16px;line-height:1.9;margin:16px 0 4px;color:#666055}
+.rules-page{max-width:1030px;padding:0 48px;margin:auto}.rules-masthead{height:96px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #373029}
+.rules-masthead>a:last-child{font-size:14px;color:#6b6254;text-decoration:none}.breadcrumbs{display:flex;gap:13px;padding:30px 0 14px;font-size:13px;color:#777267}
+.breadcrumbs a{color:inherit;text-underline-offset:4px}.rules-article{max-width:710px;margin:28px auto 0}.guide-eyebrow{font-size:13px;letter-spacing:.5px;color:#777267;margin-bottom:15px}
+.rules-article h1{font-size:42px;line-height:1.3;letter-spacing:-1.8px;font-weight:650;word-break:keep-all}.rules-article .guide-lead{font-size:18px;line-height:1.9;color:#655c4f;margin-top:22px}
+.play-link{display:inline-flex;gap:30px;margin-top:24px;border-bottom:1px solid var(--primary);padding:0 0 9px;text-decoration:none;color:var(--primary);font-size:16px;font-weight:600}
+.rules-article>section{padding-top:32px;margin-top:36px;border-top:1px solid var(--border)}
+.rules-article h2{font-size:24px;font-weight:600;letter-spacing:-.6px;margin-bottom:18px}.rules-article section p,.rules-article li{font-size:17px;line-height:1.95;color:#4e473e;word-break:keep-all;overflow-wrap:anywhere}
+.rules-article section p+p{margin-top:16px}.rules-article ul{list-style:disc;padding-left:23px;margin:0 0 22px}.rules-article li+li{margin-top:12px}
+.other-guides{max-width:710px;margin:50px auto 0;padding-top:22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:15px}.other-guides a{color:var(--primary);text-decoration:none}
+.rules-page footer a{color:inherit;text-decoration:none}
+@media(max-width:640px){.site-introduction{margin-top:45px;padding-top:26px}.intro-heading h2,.common-questions h2{font-size:21px}.guide-index{grid-template-columns:1fr;gap:0}.guide-index>a{padding:20px 0}.guide-index p{max-width:none;margin:10px 0}.common-questions{margin-top:28px}.rules-page{padding:0 20px}.rules-masthead{height:76px;gap:20px}.rules-masthead>a:last-child{font-size:13px}.breadcrumbs{padding-top:22px}.rules-article{margin-top:22px}.rules-article h1{font-size:33px;letter-spacing:-1px}.rules-article .guide-lead{font-size:17px}.rules-article h2{font-size:22px}.rules-article>section{margin-top:30px;padding-top:28px}.rules-article section p,.rules-article li{font-size:16px}.other-guides{font-size:14px}}
