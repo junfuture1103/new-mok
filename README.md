@@ -2,6 +2,8 @@
 
 파문, 침식, 유산을 한 화면에서 플레이하는 추상전략 게임 실험판입니다.
 
+**[바로 플레이하기](https://junfuture1103.github.io/new-mok/)** — GitHub Pages 공개 정적 사이트입니다. 로그인 없이 접속할 수 있습니다.
+
 세 게임의 기본 글꼴은 프리텐다드 1.3.9입니다. 제목·본문·버튼·좌표·기보에 적용하며, [글꼴과 라이선스](public/fonts/README.md)를 정적 빌드에 포함합니다.
 
 - AI 대전(가볍게 / 신중하게), 같은 기기의 2인 대전
@@ -9,7 +11,7 @@
 - 힌트, 무르기, 최근 수, 승패 판정, 재시작
 - 게임 사이 전환 시 대국 유지. 새로고침하면 초기화됩니다.
 - 키보드: Tab으로 선택, 방향키로 게임판 이동, Enter/Space로 착수, Escape로 선택 취소
-- 게임 진행에는 서버, 계정, 외부 AI API, 네트워크 연결을 사용하지 않습니다. 호스팅된 URL의 접근 제어는 Sites에서 담당합니다.
+- 게임 진행에는 서버, 계정, 외부 AI API를 사용하지 않습니다. 처음 접속할 때 정적 파일을 불러온 뒤 게임은 브라우저 안에서 실행됩니다.
 
 ## 실행
 
@@ -28,6 +30,20 @@ npm start
 ```
 
 완성된 정적 게임은 `http://127.0.0.1:4190/`에서 열립니다. `dist/client`가 배포 대상입니다. HTML을 파일로 직접 여는 방식은 지원하지 않습니다.
+
+## GitHub Pages
+
+`main`에 푸시하면 `.github/workflows/pages.yml`이 규칙 테스트·타입 검사·정적 빌드를 수행하고 GitHub Pages에 자동 배포합니다. 저장소 Settings → Pages의 Source는 **GitHub Actions**로 설정합니다.
+
+Pages 빌드는 `/new-mok/` 아래에서 코드·프리텐다드·아이콘이 로드되도록 경로를 설정합니다. 기본 `npm run build`는 기존 도메인의 루트 경로를 유지합니다.
+
+```powershell
+$env:NEXT_PUBLIC_BASE_PATH='/new-mok'
+npm run build:pages
+npm start
+```
+
+이 경우 미리 보기 주소는 `http://127.0.0.1:4190/new-mok/`입니다. 같은 환경 변수로 `npm run test:e2e`를 실행하면 Pages 경로에서 브라우저 테스트를 수행합니다. 기본 빌드로 돌아갈 때는 `Remove-Item Env:NEXT_PUBLIC_BASE_PATH`로 환경 변수를 지웁니다.
 
 ## 검증
 

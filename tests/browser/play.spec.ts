@@ -1,6 +1,6 @@
 import {test,expect,type Page} from '@playwright/test';
 const cell=(page:Page,i:number)=>page.locator(`[data-cell="${i}"]`);
-test.beforeEach(async({page})=>{await page.goto('/');await page.getByRole('tab',{name:'둘이 두기',exact:true}).click();});
+test.beforeEach(async({page})=>{await page.goto('./');await page.getByRole('tab',{name:'둘이 두기',exact:true}).click();});
 test('Ripple pushes and undo restores the board; invalid occupied move does nothing',async({page})=>{
   await cell(page,24).click();await cell(page,24).click();await expect(page.getByTestId('ply')).toContainText('01수');
   await cell(page,23).click();await expect(cell(page,25)).toHaveAttribute('data-piece','1');

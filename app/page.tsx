@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from 'react';
 import { flushSync } from 'react-dom';
+import { basePath } from '@/lib/site';
 import { RotateCcw, Undo2, Lightbulb, Crown } from 'lucide-react';
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Button } from '@/components/ui/button';
@@ -86,7 +87,7 @@ export default function Home() {
   },[]);
   return <main className="studio" data-game={game}>
     <header className="masthead">
-      <a href="/" className="wordmark" aria-label="한 수 처음으로">한 수<span className="brand-seal" aria-hidden="true">手</span></a>
+      <a href={`${basePath}/`} className="wordmark" aria-label="한 수 처음으로">한 수<span className="brand-seal" aria-hidden="true">手</span></a>
       <Tabs value={game} onValueChange={v=>{setGame(v as Game);clear();}}>
         <TabsList className="game-tabs" aria-label="게임 선택">{GAMES.map(g=><TabsTrigger key={g.id} value={g.id} className="game-tab">{g.name}</TabsTrigger>)}</TabsList>
       </Tabs>
