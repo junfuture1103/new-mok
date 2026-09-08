@@ -1,0 +1,53 @@
+{
+  "seedRange": [
+    1001,
+    1100
+  ],
+  "multiplier": 233,
+  "results": [
+    {
+      "hand": [
+        0,
+        2,
+        3
+      ],
+      "black": 58,
+      "white": 37,
+      "draw": 5,
+      "averagePlies": 35.48
+    },
+    {
+      "hand": [
+        1,
+        2,
+        4
+      ],
+      "black": 58,
+      "white": 37,
+      "draw": 5,
+      "averagePlies": 33.08
+    },
+    {
+      "hand": [
+        2,
+        3,
+        4
+      ],
+      "black": 44,
+      "white": 56,
+      "draw": 0,
+      "averagePlies": 19
+    },
+    {
+      "hand": [
+        0,
+        1,
+        4
+      ],
+      "black": 26,
+      "white": 66,
+      "draw": 8,
+      "averagePlies": 44.51
+    }
+  ]
+}
