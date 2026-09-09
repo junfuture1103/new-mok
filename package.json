@@ -9,7 +9,7 @@
     "dev": "vinext dev",
     "build": "node scripts/build.mjs",
     "build:pages": "node scripts/build-pages.mjs",
-    "test": "node --experimental-strip-types --test tests/rules.test.ts",
+    "test": "node --experimental-strip-types --test tests/rules.test.ts tests/session.test.ts",
     "test:simulate": "node --experimental-strip-types tests/simulate.ts",
     "test:e2e": "playwright test",
     "typecheck": "tsc --noEmit",

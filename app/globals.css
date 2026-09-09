@@ -53,7 +53,7 @@ button:focus-visible,a:focus-visible {outline:2px solid var(--primary);outline-o
 .row-coordinates {position:absolute;top:29px;bottom:29px;left:8px;display:grid;width:13px;text-align:center;font-family:var(--font-game);color:var(--coordinate);font-size:11px}
 .row-coordinates span {align-self:center}
 .cell {position:relative;display:flex;align-items:center;justify-content:center;aspect-ratio:1;min-width:0;padding:5px;background:none;border:0;border-right:1px solid var(--grid-color);border-bottom:1px solid var(--grid-color);border-radius:0}
-.cell:hover {background:#4a2c1710}
+@media(hover:hover) and (pointer:fine){.cell:hover {background:#4a2c1710}}
 .cell:focus-visible {outline:2px solid #9b3f2d;outline-offset:-3px;z-index:1}
 .stone {display:flex;align-items:center;justify-content:center;position:relative;width:78%;height:78%;border-radius:50%;box-shadow:1px 3px 4px #30221155,inset 0 1px 1px #ffffff25;animation:place .13s ease-out}
 .stone.white {box-shadow:1px 3px 4px #30221150,inset 0 0 0 1px #ffffff80}
@@ -63,6 +63,17 @@ button:focus-visible,a:focus-visible {outline:2px solid var(--primary);outline-o
 .cell.available:has(.stone) {box-shadow:inset 0 0 0 2px #9b3f2d}
 .cell.hinted {box-shadow:inset 0 0 0 2px #953b27;background:#963b2514}
 .cell.preview .stone {opacity:.58}
+.cell *, .move-card * {pointer-events:none}
+.cell.preview .stone {animation:none}
+.game-interaction {border:0;padding:0;margin:0;min-width:0}
+.game-interaction:disabled .board {opacity:.65;cursor:progress}
+.studio .board {touch-action:manipulation;user-select:none;-webkit-user-select:none}
+.studio .board-caption {min-height:46px;overflow-wrap:anywhere}
+.studio [data-slot=button] {min-height:44px;translate:none;transform:none;transition:background-color .12s,color .12s}
+.studio .game-tab[data-slot] {min-width:44px}
+.studio .mode-tabs[data-slot] {height:44px}
+.studio .settings [data-slot=select-trigger] {min-height:44px}
+.studio .move-card {touch-action:manipulation}
 .cell.void {background:#555d56;box-shadow:inset 1px 2px 4px #1b271d25}
 .void-cross {font-family:var(--font-game);font-size:26px;font-weight:300;color:#9da6975c}
 .last-mark {position:absolute;right:7px;bottom:7px;width:5px;height:5px;background:#913b25;border-radius:50%}
@@ -132,6 +143,7 @@ footer {border-top:1px solid var(--border);padding:19px 0 24px;display:flex;just
   .move-card{gap:9px;min-height:76px;font-size:13px}.card-pattern{width:33px;gap:1px}.card-pattern i{width:5px;height:5px}.cards{gap:7px}.hand-title,.hand-title span{font-size:12px}.move-card small{font-size:10px}.hand{margin-top:18px}footer{font-size:11px;gap:12px}
 }
 @media(max-width:430px) {.studio{padding:0 15px}.masthead{gap:10px}.game-tabs[data-slot]{gap:18px}.wordmark{font-size:23px}.brand-seal{display:none}.new-game[data-slot]{padding:0 6px;font-size:11px}.side-column{display:block}.guide-panel{padding-top:24px}.move-log{padding-top:24px}.board-frame{padding:19px}.column-coordinates{left:19px;right:19px;top:3px}.row-coordinates{top:19px;bottom:19px;left:2px}.game-heading h1{font-size:34px}.hand-title span{font-size:11px}.move-card{gap:7px;padding:10px 4px}.board-caption{min-height:44px}footer{font-size:10px}}
+@media(max-width:430px){.studio .game-tabs[data-slot]{gap:9px}.studio .new-game[data-slot]{font-size:12px}.studio .board-caption{min-height:48px}.studio .board-bottom button{padding:6px 10px;font-size:13px}.studio .board-bottom>div{gap:4px}}
 @media(prefers-reduced-motion:reduce) {*,*:before,*:after{animation:none!important;transition:none!important}}
 
 .rules-link{display:inline-block;margin-top:18px;font-size:13px;color:var(--primary);text-underline-offset:4px}
