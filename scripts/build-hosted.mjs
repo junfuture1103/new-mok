@@ -1,6 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { cp, mkdir, access } from 'node:fs/promises';
 import { build } from 'esbuild';
+import { hardenStatic } from './harden-static.mjs';
 const result = spawnSync(process.execPath, ['scripts/build.mjs'], { stdio: 'inherit', env: { ...process.env, NEXT_PUBLIC_BASE_PATH: '' } });
 if (result.status !== 0) process.exit(result.status || 1);
 await build({ entryPoints: ['server/index.ts'], outfile: 'dist/server/index.js', bundle: true, format: 'esm', platform: 'browser', target: 'es2022', define: { 'process.env.NEXT_PUBLIC_ROOM_API': 'undefined' } });
@@ -8,4 +9,5 @@ await mkdir('dist/.openai', { recursive: true });
 await cp('.openai/hosting.json', 'dist/.openai/hosting.json');
 await cp('drizzle', 'dist/.openai/drizzle', { recursive: true });
 await access('dist/client/online.html');
+await hardenStatic('dist/client');
 console.log('Sites Worker, D1 migrations and static game pages are ready.');

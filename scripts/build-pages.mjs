@@ -1,6 +1,7 @@
 import { spawnSync } from 'node:child_process';
 import { access, rename, rmdir, writeFile } from 'node:fs/promises';
 import { resolve } from 'node:path';
+import { hardenStatic } from './harden-static.mjs';
 
 const basePath = process.env.NEXT_PUBLIC_BASE_PATH || '/new-mok';
 if (!/^\/[a-zA-Z0-9_-]+$/.test(basePath)) {
@@ -25,4 +26,5 @@ const prefixed = resolve(output, basePath.slice(1));
 await rename(resolve(prefixed, '_next'), resolve(output, '_next'));
 await rmdir(prefixed);
 await writeFile(resolve(output, '.nojekyll'), '');
+await hardenStatic(output);
 console.log(`GitHub Pages artifact ready at dist/client (URL base: ${basePath}/)`);

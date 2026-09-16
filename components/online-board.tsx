@@ -38,7 +38,7 @@ export default function OnlineBoard({ state, enabled, onMove }: { state: State; 
         {display.map((v, i) => <button key={i} type="button" data-cell={i} data-piece={state.board[i]}
           className={`cell ${v === -1 ? 'void' : ''} ${selected === i ? 'selected' : ''} ${targets.includes(i) ? 'available' : ''} ${preview && v !== state.board[i] ? 'preview' : ''} ${winners.includes(i) ? 'winning' : ''}`}
           tabIndex={i === focus ? 0 : -1} aria-disabled={!enabled || v === -1} aria-pressed={state.game === 'ripple' ? undefined : selected === i}
-          aria-label={`${coord(i, state.size)} ${state.board[i] === 0 ? '빈칸' : state.board[i] === -1 ? '사라진 칸' : owner(state.board[i]) === 1 ? '흑 돌' : '백 돌'}${targets.includes(i) ? ' 이동 가능' : ''}`}
+          aria-label={`${coord(i, state.size)} ${state.board[i] === 0 ? '빈칸' : state.board[i] === -1 ? '사라진 칸' : `${owner(state.board[i]) === 1 ? '흑' : '백'} ${state.board[i] >= 3 ? '중심 말' : '돌'}`}${targets.includes(i) ? ' 이동 가능' : ''}`}
           onFocus={() => setFocus(i)} onPointerEnter={e => { if (e.pointerType === 'mouse') setHover(i); }} onPointerDown={e => { if (e.pointerType !== 'mouse') setHover(null); }} onClick={() => click(i)}
           onKeyDown={e => {
             const x = i % state.size, y = Math.floor(i / state.size);

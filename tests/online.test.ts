@@ -124,3 +124,57 @@ test('Room creation is bounded per source without storing raw IP addresses', asy
   assert(!JSON.stringify(h.sqlite.prepare('SELECT * FROM room_limits').all()).includes('192.0.2.10'));
   h.sqlite.close();
 });
+test('Malformed game values cannot create poisoned room records', async () => {
+  const h = harness();
+  for (const game of [['ripple'], { toString: 'ripple' }, null, 1, 'toString', 'gomoku']) {
+    const result = await h.call('rooms', a, { code, game, nickname: '정상' });
+    assert.equal(result.status, 400, `invalid game: ${JSON.stringify(game)}`);
+  }
+  assert.equal(h.sqlite.prepare('SELECT COUNT(*) AS n FROM rooms').get()?.n, 0);
+  h.sqlite.close();
+});
+test('Leaving after a concurrent move succeeds once, without ending a newer round', async () => {
+  const h = harness(); await h.create(); await h.join();
+  const moved = (await h.action('move', a, 1, { move: { to: 24 } })).json;
+  assert.equal(moved.version, 2);
+  const left = await h.action('leave', b, 1);
+  assert.equal(left.status, 200); assert.equal(left.json.phase, 'closed');
+  h.sqlite.close();
+});
+test('Room lookup bursts are throttled without growing a rejected rate bucket', async () => {
+  const h = harness();
+  for (let i = 0; i < 32; i++) {
+    const result = await h.join(b, '둘');
+    assert.equal(result.status, i < 30 ? 404 : 429);
+    if (i >= 30) assert.equal(result.headers.get('Retry-After'), '60');
+  }
+  assert.equal(h.sqlite.prepare('SELECT MAX(count) AS n FROM room_limits').get()?.n, 30);
+  h.sqlite.close();
+});
+test('Malformed move shapes and injected values do not mutate or crash a room', async () => {
+  const h = harness(); await h.create(); await h.join();
+  for (const move of [null, [], '24', { to: '24' }, { to: 24, from: null }, { to: -1 }, { to: 24.5 }, { to: 24, card: {} }, { to: 24, board: [1] }, JSON.parse('{"to":24,"__proto__":{"polluted":true}}')]) {
+    assert.equal((await h.action('move', a, 1, { move })).status, 400);
+  }
+  assert.equal((await h.call(`rooms/${code}`, a)).json.state.ply, 0);
+  assert.equal(({} as Record<string, unknown>).polluted, undefined);
+  h.sqlite.close();
+});
+test('Ordinary quoted nicknames are data, and changing a token does not grant another seat', async () => {
+  const h = harness();
+  assert.equal((await h.call('rooms', a, { code, game: 'ripple', nickname: "돌'친구" })).status, 200);
+  await h.join();
+  assert.equal((await h.call(`rooms/${code}`, a)).json.players[0].nickname, "돌'친구");
+  assert.equal((await h.call(`rooms/${code}`, a.slice(0, 63) + 'b')).status, 403);
+  assert.equal(h.sqlite.prepare('SELECT COUNT(*) AS n FROM rooms').get()?.n, 1);
+  h.sqlite.close();
+});
+test('Resign and leave from a previous round cannot terminate a new game', async () => {
+  const h = harness(); await h.create(); await h.join();
+  let room = (await h.action('resign', a, 1)).json;
+  room = (await h.action('rematch', a, room.version)).json;
+  room = (await h.action('rematch', b, room.version)).json;
+  for (const action of ['leave', 'resign']) assert.equal((await h.action(action, a, room.version, { round: 1 })).status, 409);
+  assert.equal((await h.call(`rooms/${code}`, a)).json.phase, 'playing');
+  h.sqlite.close();
+});

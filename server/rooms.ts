@@ -19,7 +19,8 @@ async function identity(request: Request) {
   return digest(token);
 }
 async function body(request: Request): Promise<Record<string, unknown>> {
-  if (!request.headers.get('Content-Type')?.startsWith('application/json')) return fail(415, '지원하지 않는 요청입니다.');
+  if (request.headers.get('Content-Type')?.split(';')[0].trim().toLowerCase() !== 'application/json') return fail(415, '지원하지 않는 요청입니다.');
+  if (Number(request.headers.get('Content-Length')) > 4096) return fail(413, '요청이 너무 큽니다.');
   // Limit the actual body as well as Content-Length, which clients may omit.
   const reader = request.body?.getReader();
   if (!reader) return fail(400, '요청이 비어 있습니다.');
@@ -59,10 +60,18 @@ function view(row: Row, key: string): RoomView {
 function nickname(value: unknown) {
   try { return normalizeNickname(value); } catch (e) { return fail(400, (e as Error).message); }
 }
+async function limit(db: D1Database, source: string, scope: string, maximum: number, duration: number) {
+  const now = Date.now(), bucket = Math.floor(now / duration);
+  const key = await digest(`${scope}:${source}:${bucket}`);
+  // A rejected bucket stops growing. All isolates share the same atomic limit.
+  const quota = await db.prepare('INSERT INTO room_limits (key, count, expires_at) VALUES (?, 1, ?) ON CONFLICT(key) DO UPDATE SET count = count + 1 WHERE count < ? RETURNING count')
+    .bind(key, (bucket + 2) * duration, maximum).first<{ count: number }>();
+  if (!quota) return fail(429, '요청이 너무 많아요. 잠시 후 다시 시도해주세요.');
+}
 async function create(request: Request, db: D1Database, key: string, input: Record<string, unknown>) {
   const code = input.code;
   if (typeof code !== 'string' || !ROOM_CODE.test(code)) return fail(400, '방 코드 형식이 올바르지 않습니다.');
-  if (!['ripple', 'erosion', 'legacy'].includes(String(input.game))) return fail(400, '게임을 골라주세요.');
+  if (typeof input.game !== 'string' || !['ripple', 'erosion', 'legacy'].includes(input.game)) return fail(400, '게임을 골라주세요.');
   const name = nickname(input.nickname);
   const existing = await db.prepare('SELECT * FROM rooms WHERE code = ?').bind(code).first<Row>();
   if (existing) {
@@ -72,9 +81,7 @@ async function create(request: Request, db: D1Database, key: string, input: Reco
   }
   const now = Date.now();
   // Only a time-bucketed hash is stored; raw IP addresses are never persisted.
-  const limitKey = await digest(`${request.headers.get('CF-Connecting-IP') || 'local'}:${Math.floor(now / 3600000)}`);
-  const quota = await db.prepare('INSERT INTO room_limits (key, count, expires_at) VALUES (?, 1, ?) ON CONFLICT(key) DO UPDATE SET count = count + 1 RETURNING count').bind(limitKey, now + 7200000).first<{ count: number }>();
-  if ((quota?.count ?? 13) > 12) return fail(429, '방을 너무 많이 만들었어요. 잠시 후 다시 시도해주세요.');
+  await limit(db, request.headers.get('CF-Connecting-IP') || 'local', 'create', 12, 3600000);
   const game = input.game as Game;
   const data: RoomData = { game, phase: 'waiting', round: 1, state: createGame(game), moves: [], rematch: [false, false], players: [{ key, nickname: name }], receipts: [] };
   const row = await db.prepare('INSERT INTO rooms (code, version, data, seen1, seen2, expires_at) VALUES (?, 0, ?, ?, 0, ?) ON CONFLICT(code) DO NOTHING RETURNING *').bind(code, JSON.stringify(data), now, now + DAY).first<Row>();
@@ -102,19 +109,22 @@ async function update(db: D1Database, code: string, key: string, action: string,
       data.players.push({ key, nickname: name }); data.phase = 'playing'; row.seen2 = Date.now();
     } else {
       if (seat < 0) return fail(403, '이 방의 참가자만 둘 수 있습니다.');
-      if (typeof input.id !== 'string' || !/^[a-f0-9-]{36}$/.test(input.id)) return fail(400, '요청 번호가 올바르지 않습니다.');
+      if (typeof input.id !== 'string' || !/^[a-f0-9]{8}-[a-f0-9]{4}-4[a-f0-9]{3}-[89ab][a-f0-9]{3}-[a-f0-9]{12}$/.test(input.id)) return fail(400, '요청 번호가 올바르지 않습니다.');
       const receipt = `${key}:${input.id}`;
       if (data.receipts.includes(receipt)) return view(row, key);
       // Two rematch votes commute within one finished round. A stale board
       // revision must not force the second person to click again.
-      if (action === 'rematch' && input.round !== data.round) return fail(409, '이미 다음 대국이 시작됐어요. 현재 판을 확인해주세요.');
-      if (action !== 'rematch' && input.version !== row.version) return fail(409, '대국이 갱신됐어요. 현재 판을 확인한 뒤 다시 시도해주세요.');
+      const roundAction = ['rematch', 'leave', 'resign'].includes(action);
+      if (roundAction && input.round !== data.round) return fail(409, '이미 다음 대국이 시작됐어요. 현재 판을 확인해주세요.');
+      if (!roundAction && input.version !== row.version) return fail(409, '대국이 갱신됐어요. 현재 판을 확인한 뒤 다시 시도해주세요.');
+      if (action === 'leave' && data.phase === 'closed') return view(row, key);
       if (data.phase === 'closed') return fail(410, '이미 닫힌 방입니다.');
+      if (attempt === 0) await limit(db, `${code}:${key}`, 'action', 120, 60000);
       if (action === 'move') {
         if (data.phase !== 'playing') return fail(409, '상대가 입장한 뒤 진행 중인 대국에서만 둘 수 있어요.');
         if (data.state.turn !== seat + 1) return fail(409, '상대의 차례입니다.');
         const move = input.move as Move;
-        if (!move || typeof move !== 'object' || Array.isArray(move) || !Number.isInteger(move.to) || Object.keys(move).some(k => !['to', 'from', 'card'].includes(k))) return fail(400, '착수 정보가 올바르지 않습니다.');
+        if (!move || typeof move !== 'object' || Array.isArray(move) || !Number.isSafeInteger(move.to) || Object.keys(move).some(k => !['to', 'from', 'card'].includes(k) || !Number.isSafeInteger(move[k as keyof Move]))) return fail(400, '착수 정보가 올바르지 않습니다.');
         try { data.state = applyMove(data.state, move); } catch (e) { return fail(400, (e as Error).message); }
         data.moves.push({ ...move });
         if (data.state.winner !== null) data.phase = 'finished';
@@ -136,8 +146,10 @@ async function update(db: D1Database, code: string, key: string, action: string,
       data.receipts = [...data.receipts.slice(-31), receipt];
     }
     // Compare-and-swap admits exactly one join/move/rematch for this revision.
-    const saved = await db.prepare('UPDATE rooms SET data = ?, version = version + 1, seen1 = MAX(seen1, ?), seen2 = MAX(seen2, ?) WHERE code = ? AND version = ? RETURNING *')
-      .bind(JSON.stringify(data), row.seen1, row.seen2, code, row.version).first<Row>();
+    const swap = action === 'rematch' && data.round > (JSON.parse(row.data) as RoomData).round;
+    const seen = swap ? 'seen1 = seen2, seen2 = seen1' : 'seen1 = MAX(seen1, ?), seen2 = MAX(seen2, ?)';
+    const saved = await db.prepare(`UPDATE rooms SET data = ?, version = version + 1, ${seen} WHERE code = ? AND version = ? RETURNING *`)
+      .bind(JSON.stringify(data), ...(swap ? [] : [row.seen1, row.seen2]), code, row.version).first<Row>();
     if (saved) return view(saved, key);
   }
   return fail(409, '대국이 갱신 중이에요. 잠시 후 다시 시도해주세요.');
@@ -147,7 +159,7 @@ export async function roomApi(request: Request, env: Env): Promise<Response> {
   const url = new URL(request.url), origin = request.headers.get('Origin');
   const allowed = origin === url.origin || origin === 'https://junfuture1103.github.io' ||
     (['127.0.0.1', 'localhost'].includes(url.hostname) && /^http:\/\/(127\.0\.0\.1|localhost):\d+$/.test(origin || ''));
-  const headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff' });
+  const headers = new Headers({ 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store', 'Vary': 'Origin', 'X-Content-Type-Options': 'nosniff', 'Referrer-Policy': 'no-referrer', 'Content-Security-Policy': "default-src 'none'; frame-ancestors 'none'", 'X-Frame-Options': 'DENY' });
   if (origin && allowed) {
     headers.set('Access-Control-Allow-Origin', origin);
     headers.set('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
@@ -176,12 +188,16 @@ export async function roomApi(request: Request, env: Env): Promise<Response> {
           await env.DB.prepare(`UPDATE rooms SET ${column} = ? WHERE code = ? AND version = ?`).bind(Date.now(), code, row.version).run();
         }
         result.players[result.you - 1].connected = true;
-      } else if (request.method === 'POST' && action) result = await update(env.DB, code, key, action, await body(request));
+      } else if (request.method === 'POST' && action) {
+        if (action === 'join') await limit(env.DB, request.headers.get('CF-Connecting-IP') || 'local', 'join', 30, 60000);
+        result = await update(env.DB, code, key, action, await body(request));
+      }
       else return fail(405, '지원하지 않는 요청입니다.');
     }
     return Response.json(result, { headers });
   } catch (e) {
     const expected = e instanceof HttpError;
+    if (expected && e.status === 429) headers.set('Retry-After', '60');
     if (!expected) console.error('Room request failed', (e as Error).message);
     return Response.json({ error: expected ? e.message : '대국 서버에 연결하지 못했어요. 잠시 후 다시 시도해주세요.' }, { status: expected ? e.status : 503, headers });
   }

@@ -5,6 +5,11 @@ export default {
     if (url.pathname.startsWith('/api/')) return roomApi(request, env);
     // GitHub Pages remains the public game address. This origin serves its API
     // and also contains a complete static copy for a self-contained deployment.
-    return env.ASSETS.fetch(request);
+    const asset = await env.ASSETS.fetch(request);
+    const response = new Response(asset.body, asset);
+    response.headers.set('X-Content-Type-Options', 'nosniff');
+    response.headers.set('X-Frame-Options', 'DENY');
+    response.headers.set('Referrer-Policy', 'no-referrer');
+    return response;
   },
 };

@@ -3,7 +3,7 @@ import { mkdirSync } from 'node:fs';
 import { testDatabase } from '../tests/support/sqlite.ts';
 import { roomApi } from '../server/rooms.ts';
 mkdirSync('work', { recursive: true });
-const { db } = testDatabase('work/rooms-local.sqlite');
+const { db } = testDatabase(process.env.ROOMS_TEST_DB || 'work/rooms-local.sqlite');
 http.createServer(async (req, res) => {
   const chunks = []; for await (const chunk of req) chunks.push(chunk);
   const request = new Request(`http://127.0.0.1:4191${req.url}`, { method: req.method, headers: req.headers as Record<string, string>, ...(req.method === 'POST' ? { body: Buffer.concat(chunks) } : {}) });

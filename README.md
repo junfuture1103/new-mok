@@ -36,7 +36,7 @@ npm run build
 npm start
 ```
 
-완성된 게임은 `http://127.0.0.1:4190/`에서 열립니다. `dist/client`는 정적 프런트엔드이며, `npm run build`는 Sites용 Worker와 마이그레이션도 `dist/`에 생성합니다. HTML을 파일로 직접 여는 방식은 지원하지 않습니다.
+완성된 게임은 `http://127.0.0.1:4173/`에서 열립니다. `dist/client`는 정적 프런트엔드이며, `npm run build`는 Sites용 Worker와 마이그레이션도 `dist/`에 생성합니다. HTML을 파일로 직접 여는 방식은 지원하지 않습니다.
 
 ## GitHub Pages
 
@@ -50,7 +50,7 @@ npm run build:pages
 npm start
 ```
 
-이 경우 미리 보기 주소는 `http://127.0.0.1:4190/new-mok/`입니다. 같은 환경 변수로 `npm run test:e2e`를 실행하면 Pages 경로에서 브라우저 테스트를 수행합니다. 기본 빌드로 돌아갈 때는 `Remove-Item Env:NEXT_PUBLIC_BASE_PATH`로 환경 변수를 지웁니다.
+이 경우 미리 보기 주소는 `http://127.0.0.1:4173/new-mok/`입니다. 같은 환경 변수로 `npm run test:e2e`를 실행하면 Pages 경로에서 브라우저 테스트를 수행합니다. 기본 빌드로 돌아갈 때는 `Remove-Item Env:NEXT_PUBLIC_BASE_PATH`로 환경 변수를 지웁니다.
 
 ## 검증
 
@@ -62,7 +62,7 @@ npm run build
 npm run test:e2e
 ```
 
-브라우저 테스트는 설치된 Microsoft Edge를 사용합니다. 운영체제에 맞게 `playwright.config.ts`의 channel을 조정할 수 있습니다.
+기본 브라우저 테스트는 설치된 Microsoft Edge를 사용합니다. `npx playwright install firefox` 후 `npm run test:e2e:firefox`로 Firefox의 게임·온라인 복구·접근성 검사를 실행할 수 있습니다. 온라인 검사는 아래 로컬 API 환경 변수를 사용합니다. 보안 의존성 검사는 `npm audit`입니다.
 
 ## 규칙 0.1
 
@@ -86,6 +86,8 @@ npm run test:e2e
 - 닉네임과 기보는 서버에 저장합니다. 참가자 토큰은 탭의 sessionStorage에 저장하며 초대 링크에 넣지 않습니다. 다른 탭이나 기기로 참가자 신분을 이전하는 기능은 없습니다.
 - 1.2초 간격으로 판을 확인합니다. 백그라운드에서는 10초로 줄이고 연결 실패 시 간격을 늘립니다. 자동 패배 없이 재접속을 기다립니다.
 - 기본 방 생성 제한은 접속 IP당 한 시간 12개입니다. 원본 IP는 저장하지 않고 시간 구간을 포함한 해시만 저장합니다.
+- 방 입장 시도는 IP당 1분 30회, 인증된 변경 요청은 방/참가자당 1분 120회로 제한합니다. 모든 제한은 서버에서 원자적으로 적용합니다.
+- 정적 HTML에 해시 기반 스크립트 CSP와 no-referrer를 적용합니다. 게임 폰트는 로컬 Pretendard를 유지합니다. 상세 결과와 한계는 [보안·사용성 점검](docs/SECURITY-UX-AUDIT.ko.md)에 기록했습니다.
 
 로컬 온라인 검증(PowerShell, Node.js 24):
 

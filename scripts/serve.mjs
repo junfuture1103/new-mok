@@ -16,4 +16,4 @@ http.createServer(async(req,res)=>{
     const data=await readFile(path);
     res.writeHead(200,{'Content-Type':({'.html':'text/html; charset=utf-8','.js':'text/javascript','.css':'text/css','.svg':'image/svg+xml','.png':'image/png','.xml':'application/xml','.woff2':'font/woff2','.json':'application/json'})[extname(path)]||'application/octet-stream'}).end(data);
   }catch{res.writeHead(404).end('Not found');}
-}).listen(4190,'127.0.0.1',()=>console.log(`HANSU → http://127.0.0.1:4190${basePath}/`));
+}).listen(4173,'127.0.0.1',()=>console.log(`HANSU → http://127.0.0.1:4173${basePath}/`));
