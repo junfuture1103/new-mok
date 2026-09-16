@@ -168,3 +168,38 @@ footer {border-top:1px solid var(--border);padding:19px 0 24px;display:flex;just
 .other-guides{max-width:710px;margin:50px auto 0;padding-top:22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:15px}.other-guides a{color:var(--primary);text-decoration:none}
 .rules-page footer a{color:inherit;text-decoration:none}
 @media(max-width:640px){.site-introduction{margin-top:45px;padding-top:26px}.intro-heading h2,.common-questions h2{font-size:21px}.guide-index{grid-template-columns:1fr;gap:0}.guide-index>a{padding:20px 0}.guide-index p{max-width:none;margin:10px 0}.common-questions{margin-top:28px}.rules-page{padding:0 20px}.rules-masthead{height:76px;gap:20px}.rules-masthead>a:last-child{font-size:13px}.breadcrumbs{padding-top:22px}.rules-article{margin-top:22px}.rules-article h1{font-size:33px;letter-spacing:-1px}.rules-article .guide-lead{font-size:17px}.rules-article h2{font-size:22px}.rules-article>section{margin-top:30px;padding-top:28px}.rules-article section p,.rules-article li{font-size:16px}.other-guides{font-size:14px}}
+
+.online-entry{display:grid;grid-template-columns:1fr auto;gap:7px 12px;margin-top:20px;padding:16px 0;border-bottom:1px solid var(--border);text-decoration:none;color:var(--primary);font-size:14px;grid-column:1/-1}
+.online-entry small{grid-column:1/-1;font-size:12px;color:#82776a;line-height:1.6}
+.online-masthead .online-label{display:flex;align-items:center;gap:9px;font-size:14px;color:#716454}
+.back-link{justify-self:end;display:flex;gap:7px;align-items:center;color:#716454;text-decoration:none;font-size:13px;min-height:44px}
+.online-lobby{max-width:460px;min-height:680px;margin:0 auto;padding:55px 0 50px}
+.lobby-heading h1{font-size:47px;font-weight:600;letter-spacing:-2px;line-height:1.2;margin:14px 0 19px}
+.lobby-heading p{font-size:16px;line-height:1.9;color:#756d61;margin-bottom:30px}
+.lobby-form{border:0;padding:0;margin:0;min-width:0}
+.lobby-form label{display:block;font-size:14px;font-weight:600;margin:0 0 10px}
+.lobby-form input,.lobby-form select{display:block;width:100%;height:48px;background:#fbf9f3;border:1px solid #c9c0b2;border-radius:2px;color:#3c342a;padding:0 13px;font-size:16px;outline-offset:3px}
+.lobby-form input:focus,.lobby-form select:focus{outline:2px solid var(--primary)}
+.lobby-form>input{margin-bottom:25px}.lobby-form button{width:100%;margin-top:14px}
+.online-primary[data-slot]{background:#8c3a29;color:#fff8e9;border:1px solid #8c3a29;border-radius:2px;font-size:14px;font-weight:500;min-height:46px}
+.online-primary[data-slot]:hover{background:#713022}.online-join[data-slot]{background:transparent;border:1px solid #9b8d79;border-radius:2px;min-height:46px;color:#514536}
+.lobby-divider{display:flex;align-items:center;gap:18px;margin:29px 0;color:#928675;font-size:12px}.lobby-divider:before,.lobby-divider:after{content:'';flex:1;height:1px;background:var(--border)}
+.lobby-footnote{font-size:12px;line-height:1.8;color:#938675;margin:24px 0 0}
+.online-notice{font-size:13px;line-height:1.8;color:#817360;overflow-wrap:anywhere;margin:13px 0}
+.online-error{font-size:14px;line-height:1.8;color:#963f2f;padding:12px 15px;background:#f0e2d9;border-left:2px solid #963f2f;margin:16px 0;overflow-wrap:anywhere}
+.online-players{display:grid;grid-template-columns:1fr 1fr;border-top:1px solid var(--border);border-bottom:1px solid var(--border);margin:0 0 19px;gap:15px}
+.online-players>div{display:flex;align-items:center;gap:9px;padding:14px 0;min-width:0;border-bottom:2px solid transparent}
+.online-players .current{border-bottom-color:var(--primary)}.online-players b{font-size:14px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:500}
+.online-players small{font-size:11px;color:#897d6b;flex-shrink:0;margin-left:auto}
+.online-layout .table-top [role=status]{font-size:14px;line-height:1.5}.online-layout .table-top{gap:16px;min-height:36px}.online-layout .table-meta{flex-shrink:0}
+.online-layout .cell[aria-disabled=true]{cursor:default}
+.invite-panel{border-bottom:1px solid var(--border);padding-bottom:16px}.invite-panel h2{display:flex;justify-content:space-between;align-items:center}.invite-panel h2 small{color:#948777;font-size:12px;font-weight:400}
+.room-code{display:block;letter-spacing:2px;font-size:27px;color:#473c2d;margin:20px 0;font-variant-numeric:tabular-nums;font-weight:600;white-space:nowrap}
+.invite-panel button{width:100%;margin-bottom:10px;border-radius:2px}.invite-panel input{width:100%;min-width:0;border:0;border-bottom:1px solid var(--border);background:transparent;color:#82776a;font-size:12px;padding:10px 0;min-height:44px;text-overflow:ellipsis}
+.online-waiting{padding:15px 0;border-top:1px solid var(--border);font-size:14px;line-height:1.8;color:#7d5039}
+.waiting-share{display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 0 22px}.waiting-share>span{font-size:12px;color:#817360}.waiting-share b{font-size:15px;letter-spacing:1px;color:#473c2d;margin-left:8px}.waiting-share button{margin-left:auto}.waiting-share small{flex-basis:100%;font-size:12px;color:#817360;line-height:1.6}
+.online-rules{font-size:14px;line-height:1.9;color:#807361;word-break:keep-all;overflow-wrap:anywhere}
+.online-layout .result p{font-size:13px;line-height:1.8;margin-top:8px;color:#82715b}
+.rematch-panel{border-bottom:1px solid var(--border);padding:16px 0 22px}.rematch-panel p{font-size:14px;color:#75644e;line-height:1.8;margin-bottom:13px}.rematch-panel button{background:#8c3a29;color:#fff8e9;border-radius:2px}
+.online-confirm{padding:18px;background:#ece5d8;border-top:2px solid #9b3f2d;margin-top:15px}.online-confirm p{font-size:14px;line-height:1.8;margin-bottom:14px}.online-confirm button{margin-right:8px;margin-top:5px}
+@media(max-width:720px){.online-lobby{padding:35px 0 38px;min-height:0}.lobby-heading h1{font-size:39px}.online-masthead{gap:8px}.online-masthead .online-label{font-size:13px;gap:6px}.online-masthead .back-link{font-size:12px}.online-masthead .back-link svg{display:none}.online-side{display:block}.online-side .invite-panel{padding-top:10px}.online-side .guide-panel{padding-top:22px}.online-side .move-log{padding-top:24px}.room-code{font-size:28px}.online-players>div{gap:6px}.online-players small{font-size:10px}.online-players b{font-size:13px}.online-layout .board-bottom{align-items:flex-start}.online-layout .board-bottom>span{font-size:11px;white-space:normal;line-height:1.8;padding-top:10px;max-width:45%}.online-layout .board-bottom>div{flex-shrink:0}.online-layout .game-heading p{font-size:12px}.online-layout .table-top [role=status]{font-size:13px}}

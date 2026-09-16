@@ -13,7 +13,7 @@ export default function Home() {
         description: homeDescription, applicationCategory: 'GameApplication', operatingSystem: 'Any',
         browserRequirements: 'Requires JavaScript and a modern web browser', inLanguage: 'ko-KR',
         isAccessibleForFree: true, offers: { '@type': 'Offer', price: '0', priceCurrency: 'KRW' },
-        image: absoluteUrl('og/hansu.png'), featureList: ['컴퓨터 AI 대전', '같은 기기의 2인 대전', '힌트와 무르기', '키보드 조작'],
+        image: absoluteUrl('og/hansu.png'), featureList: ['컴퓨터 AI 대전', '같은 기기의 2인 대전', '닉네임과 초대 링크로 온라인 2인 대전', '로컬 대전 힌트와 무르기', '키보드 조작'],
       },
     ] }} />
     <GameRoom><SiteIntroduction /></GameRoom>

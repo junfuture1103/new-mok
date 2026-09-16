@@ -34,11 +34,11 @@ test('Every indexable page has readable HTML, unique metadata and valid structur
   await context.close();
 });
 
-test('Sitemap lists exactly the four canonical pages and the share image is a 1200 by 630 PNG', async ({ request, baseURL }) => {
+test('Sitemap includes the online lobby and the share image is a 1200 by 630 PNG', async ({ request, baseURL }) => {
   const response = await request.get(new URL('sitemap.xml', baseURL!).href);
   expect(response.status()).toBe(200);
   const urls = [...(await response.text()).matchAll(/<loc>(.*?)<\/loc>/g)].map(match => match[1]);
-  expect(urls).toEqual(routes.map(route => canonicalBase + route));
+  expect(urls).toEqual([...routes, 'online.html'].map(route => canonicalBase + route));
   const image = await request.get(new URL('og/hansu.png', baseURL!).href);
   expect(image.status()).toBe(200);
   const png = await image.body();

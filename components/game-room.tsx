@@ -154,6 +154,7 @@ export default function GameRoom({ children }: { children?: React.ReactNode }) {
           <Tabs value={mode} onValueChange={v=>{setMode(v as Mode);clear();}}><TabsList aria-label="대전 방식" className="mode-tabs"><TabsTrigger value="ai">AI와 두기</TabsTrigger><TabsTrigger value="local">둘이 두기</TabsTrigger></TabsList></Tabs>
           {mode==='ai'?<div className="settings"><span>나는 흑, 컴퓨터는 백</span><Select value={level} onValueChange={v=>setLevel(v as 'easy'|'normal')}><SelectTrigger aria-label="AI 난이도"><SelectValue>{level==='easy'?'가볍게':'신중하게'}</SelectValue></SelectTrigger><SelectContent><SelectItem value="easy">가볍게</SelectItem><SelectItem value="normal">신중하게</SelectItem></SelectContent></Select></div>:<p className="local-note">한 기기에서 번갈아 둡니다.</p>}
         </section>
+        <a className="online-entry" href={`${basePath}/online.html?game=${game}`}><span>친구와 온라인 대국</span><span aria-hidden="true">↗</span><small>방을 만들고 초대 링크로 함께 두세요</small></a>
         <section className="guide-panel"><h2>두는 법</h2><ol className="rules-list">{info.rules.map(([title,body])=><li key={title}><b>{title}</b><p>{body}</p></li>)}</ol>
           <details className="more-rules"><summary>세부 규칙</summary><p>{game==='ripple'?'돌의 밀림은 동시에 처리됩니다. 두 색이 함께 네 개를 연결하거나 판이 가득 차면 무승부입니다. ':game==='legacy'?'패 다섯 장을 공유합니다. 시작할 때 흑이 세 장, 백이 두 장을 가지며, 자기 차례에는 항상 세 장이 됩니다. 패의 방향은 백에게 180° 회전합니다. ':''}{game!=='erosion'?'차례와 배치(유산은 패 포함)가 세 번 반복되거나 160수가 지나면 무승부입니다.':'출발 칸만 사라집니다. 지나간 칸과 도착 칸은 남습니다.'} 대국은 현재 탭에 임시 저장됩니다. 새로고침하거나 규칙을 읽고 돌아와도 이어둘 수 있습니다.</p></details>
         </section>

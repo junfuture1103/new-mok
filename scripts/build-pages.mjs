@@ -17,6 +17,7 @@ if (build.status !== 0) process.exit(build.status || 1);
 // repository path already, so the uploaded files must not repeat that prefix.
 const output = resolve('dist/client');
 await access(resolve(output, 'index.html'));
+await access(resolve(output, 'online.html'));
 for (const game of ['ripple', 'erosion', 'legacy']) {
   await access(resolve(output, 'rules', `${game}.html`));
 }

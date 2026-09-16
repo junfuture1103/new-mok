@@ -10,6 +10,7 @@
 - WebSite, WebApplication, VideoGame, BreadcrumbList JSON-LD는 실제 기능과 공개 본문만 설명합니다. 이용자 수·평점·수상 내역을 만들어 넣지 않습니다. 구조화 데이터가 검색 특수 표시나 순위를 보장하지는 않습니다.
 - `public/og/hansu.png`는 1200×630 공유 이미지입니다. `node scripts/create-social-preview.mjs`로 프리텐다드를 불러와 재생성할 수 있습니다.
 - 사이트맵: https://junfuture1103.github.io/new-mok/sitemap.xml
+- 온라인 대국 대기실 `/online.html`도 정적 HTML·고유 메타데이터·사이트맵에 포함합니다. 방 코드 쿼리의 canonical은 대기실 주소이며, 참가자나 대국 내용은 초기 HTML과 검색 메타데이터에 포함하지 않습니다.
 - `tests/browser/seo.spec.ts`는 JavaScript 없는 본문, canonical·공유 정보·JSON-LD, 내부 링크, 사이트맵, 이미지 크기, 안내에서 해당 게임으로 이동하는 동작을 검사합니다.
 
 ## Google / 네이버 등록
